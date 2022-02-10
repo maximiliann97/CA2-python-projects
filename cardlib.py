@@ -21,13 +21,10 @@ class PlayingCard(ABC):
         pass
 
     def __eq__(self, other):
-        return self.value == other.value, self.suit.value == other.suit.value
+        return self.get_value() == other.get_value(), self.suit.value == other.suit.value
 
     def __lt__(self, other):    # We only check the magnitude:
-        return self.value < other.value, self.suit.value < other.suit.value
-
-    def __repr__(self):
-        return "PlayingCard('{}', '{}')".format(self.value, self.suit)
+        return self.get_value() < other.get_value(), self.suit.value < other.suit.value
 
 
 class NumberedCard(PlayingCard):
