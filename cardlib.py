@@ -1,46 +1,72 @@
 from enum import Enum
-
+from abc import ABC, abstractmethod
 
 class Suit(Enum):
-    HEARTS = 4
-    SPADES = 3
-    CLUBS = 2
-    DIAMONDS = 1
-#        self.suits = [HEARTS, SPADES, CLUBS, DIAMONDS]
-#        self.suit = self.suits[suit]
+    Hearts = 4
+    Spades = 3
+    Clubs = 2
+    Diamonds = 1
+
+    def __str__(self):
+        return self.name[0]
+
+s = Suit.Hearts
+s.value
+c1 = NumberedCard(3, Suit.Spades)
+c2 = NumberedCard(3, Suit.Hearts)
+#c1 == c2
+#c1 > c2
+#c1.get_value() > c2.get_value()
+
 
 for suit in Suit:
-    print(suit)
+    print(suit.name)
 
 
-class PlayingCard:
-    def __init__(self, value: int, suit: Suit):
+class PlayingCard(ABC):
+    def __init__(self, suit: Suit):
+        self.suit = suit
+
+    @abstractmethod
+    def get_value(self):
         pass
+
+    def __repr__(self):
+        return "PlayingCard('{}', '{}')".format(self.value, self.suit)
+
 
 
 class NumberedCard(PlayingCard):
     def __init__(self, value, suit):
-        self.values = range(2, 11)
-        self.value = self.values[value]
+        self.value = value
+        super().__init__(suit)
+
+    def get_value(self):
+        return self.value
 
 
 class JackCard(PlayingCard):
     def __init__(self, suit):
-        pass
-
+        super().__init__(suit)
     def get_value(self):
         return 11
 
+class QueenCard(PlayingCard):
+    def __init__(self, suit):
+        super().__init__(suit)
+    def get_value(self):
+        return 12
+
+class KingCard(PlayingCard):
+    def __init__(self, suit):
+        super().__init__(suit)
+    def get_value(self):
+        return 13
+
+class AceCard(PlayingCard):
+    def __init__(self, suit):
+        super().__init__(suit)
+    def get_value(self):
+        return 14
 
 
-
-
-
-
-
-#class PlayingCard:
- #   def __init__(self, value, suit):
-  #      self.values = ["Ace", 2, 3, 4, 5, 6, 7, 8, 9, 10, "Jack", "Queen", "King"]
-   #     self.value = self.values[value]
-    #    self.suits = {"Hearts", "Spades", "Clubs", "Diamonds"}
-     #   self.suit = self.suits[suit]
