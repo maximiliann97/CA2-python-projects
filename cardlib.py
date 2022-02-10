@@ -71,5 +71,25 @@ class AceCard(PlayingCard):
 
 
 c1 = NumberedCard(3, Suit.Spades)
-c2 = NumberedCard(3, Suit.Hearts)
+c2 = NumberedCard(3, Suit.Spades)
 
+print(c2>c1)
+
+
+class Hand:
+    def __init__(self, cards=None):
+        if cards is None:
+            self.cards = []     # We almost always want to initialise variables.
+        else:
+            self.cards = cards
+
+    def add_card(card):
+        self.cards.append(card)
+
+    def drop_card(cards, index):
+        cards.index = index
+        for index in cards:
+            self.cards.pop(index)
+
+    def sort(self):
+        pass
