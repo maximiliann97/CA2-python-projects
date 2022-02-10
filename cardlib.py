@@ -1,6 +1,6 @@
 from enum import Enum
 from abc import ABC, abstractmethod
-import random
+from random import shuffle
 
 class Suit(Enum):
     Hearts = 3
@@ -96,10 +96,18 @@ class Hand:
         pass
 
 
+
 class StandardDeck:
     def __init__(self, cards):
+        self.cards = cards
         self.deck = []
 
-    def build_deck(self, ):
-        self.deck.append(cards)
+    def build_deck(self, cards):
+        for i in cards:
+            self.deck.append(i)
 
+    def shuffle(self, deck):
+        shuffle(deck)
+
+    def draw(self, deck):
+        self.deck.pop(0)
