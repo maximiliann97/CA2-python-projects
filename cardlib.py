@@ -1,6 +1,6 @@
 from enum import Enum
 from abc import ABC, abstractmethod
-
+import random
 
 class Suit(Enum):
     Hearts = 3
@@ -94,3 +94,12 @@ class Hand:
 
     def best_poker_hand(self, cards=[]):
         pass
+
+
+class StandardDeck:
+    def __init__(self, cards):
+        self.deck = []
+
+    def build_deck(self, ):
+        self.deck.append(cards)
+
