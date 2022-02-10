@@ -1,6 +1,7 @@
 from enum import Enum
 from abc import ABC, abstractmethod
 
+
 class Suit(Enum):
     Hearts = 3
     Spades = 2
@@ -19,6 +20,12 @@ class PlayingCard(ABC):
     def get_value(self):
         pass
 
+    def __eq__(self, other):
+        return self.value == other.value, self.suit.value == other.suit.value
+
+    def __lt__(self, other):    # We only check the magnitude:
+        return self.value < other.value, self.suit.value < other.suit.value
+
     def __repr__(self):
         return "PlayingCard('{}', '{}')".format(self.value, self.suit)
 
@@ -30,12 +37,6 @@ class NumberedCard(PlayingCard):
 
     def get_value(self):
         return self.value
-
-    def __eq__(self, other):
-        return self.value == other.value, self.suit.value == other.suit.value
-
-    def __lt__(self, other): # We only check the magnitude:
-        return self.value < other.value, self.suit.value < other.suit.value
 
 
 class JackCard(PlayingCard):
@@ -70,10 +71,10 @@ class AceCard(PlayingCard):
         return 14
 
 
-c1 = NumberedCard(3, Suit.Spades)
+c1 = JackCard(Suit.Spades)
 c2 = NumberedCard(3, Suit.Spades)
 
-print(c2>c1)
+print(c1 > c2)
 
 
 class Hand:
@@ -83,13 +84,16 @@ class Hand:
         else:
             self.cards = cards
 
-    def add_card(card):
+    def add_card(self, card):
         self.cards.append(card)
 
-    def drop_card(cards, index):
+    def drop_card(self, cards, index):
         cards.index = index
         for index in cards:
             self.cards.pop(index)
 
-    def sort(self):
+    def sort(self, cards):
+        self.cards.sort()
+
+    def best_poker_hand(self, cards=[]):
         pass
