@@ -21,10 +21,10 @@ class PlayingCard(ABC):
         pass
 
     def __eq__(self, other):
-        return self.get_value() == other.get_value(), self.suit.value == other.suit.value
+        return self.get_value() == other.get_value()
 
-    def __lt__(self, other):    # We only check the magnitude:
-        return self.get_value() < other.get_value(), self.suit.value < other.suit.value
+    def __lt__(self, other):
+        return self.get_value() < other.get_value()
 
 
 class NumberedCard(PlayingCard):
@@ -96,18 +96,27 @@ class Hand:
         pass
 
 
-
 class StandardDeck:
     def __init__(self, cards):
-        self.cards = cards
-        self.deck = []
+        self.cards = []
 
     def build_deck(self, cards):
-        for i in cards:
-            self.deck.append(i)
+        for suit in Suit:
+            self.cards.append(AceCard(suit))
+            self.cards.append(KingCard(suit))
+            self.cards.append(QueenCard(suit))
+            self.cards.append(JackCard(suit))
+            for v in range(2, 11):
+                self.cards.append(NumberedCard(v, suit))
 
-    def shuffle(self, deck):
-        shuffle(deck)
 
-    def draw(self, deck):
-        self.deck.pop(0)
+    def shuffle(self, cards):
+        shuffle(cards)
+
+    def draw(self, cards):
+        self.cards.pop(0)
+
+d = StandardDeck.cards
+for c in d:
+    print(c)
+print(d)
