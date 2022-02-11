@@ -76,24 +76,54 @@ c1 = JackCard(Suit.Spades)
 c2 = NumberedCard(3, Suit.Spades)
 
 
+class StandardDeck:
+    def __init__(self):
+        self.cards = []
+
+        for suit in Suit:
+            self.cards.append(AceCard(suit))
+            self.cards.append(KingCard(suit))
+            self.cards.append(QueenCard(suit))
+            self.cards.append(JackCard(suit))
+            for value in range(2, 11):
+                self.cards.append(NumberedCard(value, suit))
+
+    def __iter__(self):
+        return iter(self.cards)
+
+    def shuffle(self):
+        shuffle(self.cards)
+
+    def draw(self):
+        return self.cards.pop(0)
+
+
+#d = StandardDeck()
+#for c in d:
+#    print(c)
+
+
 class Hand:
     def __init__(self, cards=None):
         if cards is None:
-            self.cards = []     # We almost always want to initialise variables.
+            self.cards = []  # We almost always want to initialise variables.
         else:
             self.cards = cards
+        #self.sort() fråga Michael!!!
+        #self.drop_cards()
 
     def add_card(self, card):
         self.cards.append(card)
 
-    def drop_card(self, cards, index):
-        cards.index = index
-        dropped_cards = []
-        for index in cards:
-            dropped_cards.append(self.cards.pop(index))
+    def __delitem__(self):
+        pass
 
-    def sort(self, cards):
-        self.cards.sort()
+    def drop_cards(self, indices):
+        for index in sorted(indices, reverse=True):
+            del self.cards[index]
+
+    def sort(self):
+        return self.cards.sort()
 
     def best_poker_hand(self, cards=[]):
         pass
