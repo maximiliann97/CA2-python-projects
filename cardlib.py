@@ -2,6 +2,7 @@ from enum import Enum
 from abc import ABC, abstractmethod
 from random import shuffle
 
+
 class Suit(Enum):
     Hearts = 3
     Spades = 2
@@ -25,6 +26,9 @@ class PlayingCard(ABC):
 
     def __lt__(self, other):
         return self.get_value() < other.get_value()
+
+    def __str__(self):
+        return f" Card value: {self.get_value()}"
 
 
 class NumberedCard(PlayingCard):
@@ -71,8 +75,6 @@ class AceCard(PlayingCard):
 c1 = JackCard(Suit.Spades)
 c2 = NumberedCard(3, Suit.Spades)
 
-print(c1 > c2)
-
 
 class Hand:
     def __init__(self, cards=None):
@@ -86,8 +88,9 @@ class Hand:
 
     def drop_card(self, cards, index):
         cards.index = index
+        dropped_cards = []
         for index in cards:
-            self.cards.pop(index)
+            dropped_cards.append(self.cards.pop(index))
 
     def sort(self, cards):
         self.cards.sort()
@@ -97,26 +100,28 @@ class Hand:
 
 
 class StandardDeck:
-    def __init__(self, cards):
+    def __init__(self):
         self.cards = []
+        self.build_deck()
 
-    def build_deck(self, cards):
+    def build_deck(self):
         for suit in Suit:
             self.cards.append(AceCard(suit))
             self.cards.append(KingCard(suit))
             self.cards.append(QueenCard(suit))
             self.cards.append(JackCard(suit))
-            for v in range(2, 11):
-                self.cards.append(NumberedCard(v, suit))
+            for value in range(2, 11):
+                self.cards.append(NumberedCard(value, suit))
+
+    def shuffle(self):
+        shuffle(self.cards)
+
+    def draw(self):
+        return self.cards.pop(0)
 
 
-    def shuffle(self, cards):
-        shuffle(cards)
 
-    def draw(self, cards):
-        self.cards.pop(0)
-
-d = StandardDeck.cards
-for c in d:
-    print(c)
-print(d)
+#d = StandardDeck()
+#print(d)
+#for c in d.cards:
+#    print(c)
