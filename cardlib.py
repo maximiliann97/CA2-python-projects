@@ -1,7 +1,7 @@
 from enum import Enum
 from abc import ABC, abstractmethod
 from random import shuffle
-
+from collections import Counter
 
 class Suit(Enum):
     Hearts = 3
@@ -115,9 +115,6 @@ class Hand:
     def add_card(self, card):
         self.cards.append(card)
 
-    def __delitem__(self):
-        pass
-
     def drop_cards(self, indices):
         for index in sorted(indices, reverse=True):
             del self.cards[index]
@@ -126,7 +123,7 @@ class Hand:
         return self.cards.sort()
 
     def best_poker_hand(self, cards=[]):
-        pass
+        value_counter = Counter(self.cards)
 
 
 class StandardDeck:
@@ -149,9 +146,14 @@ class StandardDeck:
     def draw(self):
         return self.cards.pop(0)
 
-
-
 #d = StandardDeck()
 #print(d)
 #for c in d.cards:
 #    print(c)
+
+class PokerHand:
+    def __init__(self, cards):
+        self.cards = cards
+
+    def __lt__(self, other):
+        pass
