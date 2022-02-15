@@ -206,10 +206,8 @@ class PokerHand:
         # Find the card ranks that have at least four of a kind
         fours = [v[0] for v in value_count.items() if v[1] >= 4]
         fours.sort()
-
         if fours:
             return HandType.FOUR_OF_A_KIND.name, max(fours)
-
 
     @staticmethod
     def check_full_house(cards):
@@ -222,12 +220,19 @@ class PokerHand:
         # Find the card ranks that have at least a pair
         twos = [v[0] for v in value_count.items() if v[1] >= 2]
         twos.sort()
-
         # Threes are dominant in full house, lets check that value first:
         for three in reversed(threes):
             for two in reversed(twos):
                 if two != three:
                     return HandType.FULL_HOUSE.name, three, two
+
+    @staticmethod
+    def check_flush(cards):
+        for c in reversed(cards):
+            if c.suit != cards[0].suit:
+                break
+            else:
+                return HandType.FLUSH.name, c.get_value()
 
     @staticmethod
     def check_straight(cards):
@@ -243,18 +248,6 @@ class PokerHand:
             if found_straight:
                 return HandType.STRAIGHT.name, c.get_value()
 
-   # @staticmethod
-   # def check_flush(cards):
-     #   vals = [(c.get_value(), c.suit) for c in cards]
-
-      #  for i, c in enumerate(reversed(cards)):
-      #      for j in in c
-
-
-
-
-
-
     @staticmethod
     def check_diff_pairs(cards):
         value_count = Counter()
@@ -264,11 +257,28 @@ class PokerHand:
         threes = [v[0] for v in value_count.items() if v[1] >= 3]
         threes.sort()
         # Find the card ranks that have at least a pair
-        twos = [v[0] for v in value_count.items() if v[1] >= 2]
-        twos.sort()
+        twos_1 = [v[0] for v in value_count.items() if v[1] >= 2]
+        twos_1.sort()
+        twos_2 = [v[0] for v in value_count.items() if v[1] >= 2]
+        twos_2.sort()
 
         if threes:
             return HandType.THREE_OF_A_KIND, max(threes)
+        if twos_1 != twos_2:
+            return
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -281,13 +291,13 @@ class PokerHand:
 
 
 l = NumberedCard(4, 'Hearts')
-k = NumberedCard(4, 'Spades')
-r = NumberedCard(4, 'lol')
-q = NumberedCard(5,'jjjjj')
-y = NumberedCard(5,'lijj')
+k = NumberedCard(4, 'Hearts')
+r = NumberedCard(4, 'Hearts')
+q = NumberedCard(5,'Hearts')
+y = NumberedCard(5,'Hearts')
 hej = [l, k, r, q, y]
 n = PokerHand
-print(n.check_full_house(hej))
+print(n.check_flush(hej))
 
 
 
