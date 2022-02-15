@@ -3,14 +3,15 @@ from abc import abstractmethod
 from random import shuffle
 from collections import Counter
 
+
 class Suit(Enum):
     Hearts = 3
     Spades = 2
     Clubs = 1
     Diamonds = 0
 
-    #def __str__(self):
-        #return self.name[0]
+    # def __str__(self):
+    # return self.name[0]
 
 
 class PlayingCard:
@@ -27,7 +28,7 @@ class PlayingCard:
     def __lt__(self, other):
         return self.get_value() < other.get_value()
 
-    def __repr__(self):      # Ändrarde från str till repr
+    def __repr__(self):  # Ändrarde från str till repr
         return f" Card value: {self.get_value()}"
 
 
@@ -64,9 +65,9 @@ class AceCard(PlayingCard):
         return 14
 
 
-#c1 = JackCard(Suit.Spades)
-#c2 = NumberedCard(3, Suit.Spades)
-#print(c1)
+# c1 = JackCard(Suit.Spades)
+# c2 = NumberedCard(3, Suit.Spades)
+# print(c1)
 
 class StandardDeck:
     def __init__(self):
@@ -90,15 +91,8 @@ class StandardDeck:
         return self.cards.pop(0)
 
 
-
-
-
-
-
-
-
-#d = StandardDeck()
-#for c in d:
+# d = StandardDeck()
+# for c in d:
 # print(c)
 
 
@@ -108,11 +102,11 @@ class Hand:
             self.cards = []  # We almost always want to initialise variables.
         else:
             self.cards = cards
-        #self.sort() fråga Michael!!!
-        #self.drop_cards()
+        # self.sort() fråga Michael!!!
+        # self.drop_cards()
 
     def add_card(self, card):
-        self.cards.append(card)   # ska man inte ha en if sats, tänker man kan väl inte ha två av samma kort
+        self.cards.append(card)  # ska man inte ha en if sats, tänker man kan väl inte ha två av samma kort
 
     def drop_cards(self, indices):
         for index in sorted(indices, reverse=True):
@@ -124,24 +118,15 @@ class Hand:
     def best_poker_hand(self, cards=[]):
         return PokerHand(self.cards + cards)
 
+    # def full_house(self):
+
+    # def best_poker_hand(self, cards=None):
+    # if cards is None:
+    # cards = []
+    # value_counter = Counter(self.cards)
 
 
-
-
-    #def full_house(self):
-
-    #def best_poker_hand(self, cards=None):
-        #if cards is None:
-            #cards = []
-        #value_counter = Counter(self.cards)
-
-
-
-
-
-
-
-#class StandardDeck:
+# class StandardDeck:
 #    def __init__(self):
 #        self.cards = []
 #        self.build_deck()
@@ -156,16 +141,15 @@ class Hand:
 #                self.cards.append(NumberedCard(value, suit))
 
 #    def shuffle(self):
- #       shuffle(self.cards)
+#       shuffle(self.cards)
 
 #    def draw(self):
 #        return self.cards.pop(0)
 
 
-
-#d = StandardDeck()
-#print(d)
-#for c in d.cards:
+# d = StandardDeck()
+# print(d)
+# for c in d.cards:
 #    print(c)
 
 class HandType(Enum):
@@ -252,54 +236,34 @@ class PokerHand:
     def check_diff_pairs(cards):
         value_count = Counter()
         for c in cards:
-            value_count[c.give_value()] += 1
+            value_count[c.get_value()] += 1
         # Find the card ranks that have at least three of a kind
         threes = [v[0] for v in value_count.items() if v[1] >= 3]
         threes.sort()
         # Find the card ranks that have at least a pair
-        twos_1 = [v[0] for v in value_count.items() if v[1] >= 2]
-        twos_1.sort()
-        twos_2 = [v[0] for v in value_count.items() if v[1] >= 2]
-        twos_2.sort()
+        twos = [v[0] for v in value_count.items() if v[1] >= 2]
+        twos.sort()
 
         if threes:
             return HandType.THREE_OF_A_KIND, max(threes)
-        if twos_1 != twos_2:
-            return
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        if twos:
+            if len(twos) == 2:
+                return HandType.TWO_PAIRS.name, max(twos)
+            elif len(twos) == 1:
+                return HandType.PAIR.name, twos
 
     def __lt__(self, other):
         pass
 
 
-
-
 l = NumberedCard(4, 'Hearts')
 k = NumberedCard(4, 'Hearts')
 r = NumberedCard(4, 'Hearts')
-q = NumberedCard(5,'Hearts')
-y = NumberedCard(5,'Hearts')
+q = NumberedCard(5, 'Hearts')
+y = NumberedCard(5, 'Hearts')
 hej = [l, k, r, q, y]
 n = PokerHand
 print(n.check_flush(hej))
-
-
 
 h = Hand()
 d = StandardDeck()
@@ -313,8 +277,3 @@ h.add_card(d.draw())
 h.sort()
 
 print(h.cards)
-
-
-
-
-
