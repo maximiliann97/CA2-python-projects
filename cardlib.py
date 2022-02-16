@@ -1,5 +1,5 @@
 from enum import Enum
-from abc import abstractmethod
+from abc import ABC, abstractmethod
 from random import shuffle
 from collections import Counter
 
@@ -14,7 +14,7 @@ class Suit(Enum):
     # return self.name[0]
 
 
-class PlayingCard:
+class PlayingCard(ABC):
     def __init__(self, suit: Suit):
         self.suit = suit
 
@@ -115,7 +115,7 @@ class Hand:
     def sort(self):
         return self.cards.sort()
 
-    def best_poker_hand(self, cards=[]):
+    def best_poker_hand(self, cards):
         return PokerHand(self.cards + cards)
 
     # def full_house(self):
@@ -167,6 +167,22 @@ class HandType(Enum):
 class PokerHand:
     def __init__(self, cards: list):
         self.cards = cards
+        if self.check_straight_flush(cards):
+            self.type = self.check_straight_flush(cards)
+        elif self.check_four_of_a_kind(cards):
+            self.type = self.check_four_of_a_kind(cards)
+        elif self.check_full_house(cards):
+            self.type = self.check_full_house(cards)
+        elif self.check_flush(cards):
+            self.type = self.check_flush(cards)
+        elif self.check_straight(cards):
+            self.type = self.check_flush(cards)
+        elif self.check_diff_pairs(cards):
+            self.type = self.check_diff_pairs(cards)
+
+
+
+
 
     @staticmethod
     def check_straight_flush(cards):
@@ -245,35 +261,45 @@ class PokerHand:
         twos.sort()
 
         if threes:
-            return HandType.THREE_OF_A_KIND, max(threes)
+            return HandType.THREE_OF_A_KIND.name, max(threes)
         if twos:
             if len(twos) == 2:
                 return HandType.TWO_PAIRS.name, max(twos)
             elif len(twos) == 1:
-                return HandType.PAIR.name, twos
-
-    def __lt__(self, other):
-        pass
+                return HandType.PAIR.name, max(twos)
+        return HandType.HIGH_CARD.name, max(cards)
 
 
-l = NumberedCard(4, 'Hearts')
+    def __repr__(self):
+        return f'{self.type}'
+
+
+
+
+l = NumberedCard(3, 'Hearts')
 k = NumberedCard(4, 'Hearts')
-r = NumberedCard(4, 'Hearts')
-q = NumberedCard(5, 'Hearts')
-y = NumberedCard(5, 'Hearts')
+r = NumberedCard(10, 'Hearts')
+q = NumberedCard(10, 'Hearts')
+y = NumberedCard(10, 'Hearts')
 hej = [l, k, r, q, y]
+
 n = PokerHand
+
+print(n.check_full_house(hej))
 print(n.check_flush(hej))
+
+
+
+
+
 
 h = Hand()
 d = StandardDeck()
 d.shuffle()
 h.add_card(d.draw())
 h.add_card(d.draw())
-h.add_card(d.draw())
-h.add_card(d.draw())
-h.add_card(d.draw())
-
 h.sort()
 
-print(h.cards)
+tjena = h.best_poker_hand(hej)
+print(tjena)
+
