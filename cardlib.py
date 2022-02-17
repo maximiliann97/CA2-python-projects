@@ -133,7 +133,7 @@ class PokerHand:
                 break
 
     def __lt__(self, other):
-        pass
+        self.type.value < other.type.value
 
     @staticmethod
     def check_straight_flush(cards):
@@ -251,3 +251,7 @@ print(hej)
 print(h.cards)
 tjena = h.best_poker_hand(hej)
 print(tjena)
+
+
+p = HandType.FOUR_OF_A_KIND.value
+print(p)
