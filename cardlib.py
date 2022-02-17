@@ -1,10 +1,11 @@
+from enum import IntEnum
 from enum import Enum
 from abc import ABC, abstractmethod
 from random import shuffle
 from collections import Counter
 
 
-class Suit(Enum):
+class Suit(IntEnum):
     Hearts = 3
     Spades = 2
     Clubs = 1
@@ -108,7 +109,8 @@ class Hand:
         return PokerHand(self.cards + cards)
 
 
-class HandType(Enum):
+class HandType(IntEnum):
+
     STRAIGHT_FLUSH = 9
     FOUR_OF_A_KIND = 8
     FULL_HOUSE = 7
@@ -123,17 +125,17 @@ class HandType(Enum):
 class PokerHand:
     def __init__(self, cards: list):
         self.cards = cards
-
         checkers = [self.check_straight_flush(cards), self.check_four_of_a_kind(cards), self.check_full_house(cards),
-                    self.check_full_house(cards), self.check_straight(cards), self.check_diff_pairs(cards)]
+                    self.check_flush(cards), self.check_straight(cards), self.check_diff_pairs(cards)]
 
         for checker in checkers:
-            if checker is not None:
-                self.type = checker
+            v = checker
+            if v is not None:
+                self.type = v
                 break
 
     def __lt__(self, other):
-        self.type.value < other.type.value
+        return self.type < other.type
 
     @staticmethod
     def check_straight_flush(cards):
@@ -175,7 +177,7 @@ class PokerHand:
         for three in reversed(threes):
             for two in reversed(twos):
                 if two != three:
-                    return HandType.FULL_HOUSE, three, two
+                    return HandType.FULL_HOUSE, (three, two)
 
     @staticmethod
     def check_flush(cards):
@@ -224,34 +226,65 @@ class PokerHand:
         return f'{self.type}'
 
 
-l = NumberedCard(3, 'Hearts')
-k = NumberedCard(4, 'Hearts')
-j = NumberedCard(4, 'Hearts')
-q = NumberedCard(5, 'Hearts')
-y = NumberedCard(5, 'Hearts')
-r = NumberedCard(10, 'Hearts')
-q = NumberedCard(10, 'Hearts')
-y = NumberedCard(10, 'Hearts')
-hej = [l, j, r, q, y]
+l = NumberedCard(3, Suit.Hearts)
+j = NumberedCard(4, Suit.Hearts)
+q = NumberedCard(5, Suit.Hearts)
+y = NumberedCard(5, Suit.Hearts)
+r = NumberedCard(10, Suit.Hearts)
+
+cards = [l, j, r, q, y]
 
 n = PokerHand
-
-print(n.check_full_house(hej))
-print(n.check_flush(hej))
 
 h = Hand()
 d = StandardDeck()
 d.shuffle()
 h.add_card(d.draw())
 h.add_card(d.draw())
-
 h.sort()
 
-print(hej)
+print(cards)
 print(h.cards)
-tjena = h.best_poker_hand(hej)
-print(tjena)
+best_hand = h.best_poker_hand(cards)
+print(best_hand)
 
+#print(HandType.THREE_OF_A_KIND > HandType.PAIR)
 
-p = HandType.FOUR_OF_A_KIND.value
-print(p)
+a = HandType.PAIR, 12
+
+print(a)
+
+b = HandType.PAIR, 12
+
+print(a > b)
+
+h1 = Hand()
+h1.add_card(QueenCard(Suit.Diamonds))
+h1.add_card(KingCard(Suit.Hearts))
+
+h2 = Hand()
+h2.add_card(QueenCard(Suit.Hearts))
+h2.add_card(KingCard(Suit.Hearts))
+
+cl = [NumberedCard(10, Suit.Diamonds), NumberedCard(9, Suit.Diamonds),
+      NumberedCard(8, Suit.Clubs), NumberedCard(6, Suit.Spades)]
+
+ph1 = h1.best_poker_hand(cl)
+print(ph1)
+print(isinstance(ph1, PokerHand))
+ph2 = h2.best_poker_hand(cl)
+print(ph2)
+
+print(ph1 < ph2)
+
+cl.pop(0)
+cl.append(QueenCard(Suit.Spades))
+ph3 = h1.best_poker_hand(cl)
+ph4 = h2.best_poker_hand(cl)
+print(ph3)
+print(ph4)
+
+print(ph3 == ph4)
+print(ph3 > ph4)
+print(ph3 < ph4)
+
