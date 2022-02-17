@@ -10,8 +10,8 @@ class Suit(Enum):
     Clubs = 1
     Diamonds = 0
 
-    # def __str__(self):
-    # return self.name[0]
+    def __str__(self):
+        return self.name
 
 
 class PlayingCard(ABC):
@@ -28,8 +28,8 @@ class PlayingCard(ABC):
     def __lt__(self, other):
         return self.get_value() < other.get_value()
 
-    def __repr__(self):  # Ändrarde från str till repr
-        return f" Card value: {self.get_value()}"
+    def __repr__(self):
+        return f"{self.suit} of {self.get_value()}"
 
 
 class NumberedCard(PlayingCard):
@@ -63,7 +63,6 @@ class AceCard(PlayingCard):
 
     def get_value(self):
         return 14
-
 
 
 class StandardDeck:
@@ -131,6 +130,7 @@ class PokerHand:
         for checker in checkers:
             if checker is not None:
                 self.type = checker
+                break
 
     def __lt__(self, other):
         pass
@@ -212,50 +212,42 @@ class PokerHand:
         twos.sort()
 
         if threes:
-            return HandType.THREE_OF_A_KIND.name, max(threes)
+            return HandType.THREE_OF_A_KIND, max(threes)
         if twos:
             if len(twos) == 2:
-                return HandType.TWO_PAIRS.name, max(twos)
+                return HandType.TWO_PAIRS, max(twos)
             elif len(twos) == 1:
-                return HandType.PAIR.name, max(twos)
+                return HandType.PAIR, max(twos)
         return HandType.HIGH_CARD, max(cards)
 
     def __repr__(self):
         return f'{self.type}'
 
 
-
 l = NumberedCard(3, 'Hearts')
 k = NumberedCard(4, 'Hearts')
-r = NumberedCard(4, 'Hearts')
+j = NumberedCard(4, 'Hearts')
 q = NumberedCard(5, 'Hearts')
 y = NumberedCard(5, 'Hearts')
 r = NumberedCard(10, 'Hearts')
 q = NumberedCard(10, 'Hearts')
 y = NumberedCard(10, 'Hearts')
-hej = [l, k, r, q, y]
+hej = [l, j, r, q, y]
 
 n = PokerHand
 
 print(n.check_full_house(hej))
 print(n.check_flush(hej))
 
-
-
-
-
-
 h = Hand()
 d = StandardDeck()
 d.shuffle()
 h.add_card(d.draw())
 h.add_card(d.draw())
-h.add_card(d.draw())
-h.add_card(d.draw())
-h.add_card(d.draw())
 
 h.sort()
 
+print(hej)
 print(h.cards)
 tjena = h.best_poker_hand(hej)
 print(tjena)
