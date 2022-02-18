@@ -28,10 +28,10 @@ def test_cards():
     assert ace.get_value() == 14
 
     # Compares the different card types.
-    assert h5 == h5     # Numbered card equal to itself
-    assert queen == queen   # Royal card equal to itself
-    assert ace == ace_hearts    # Check so that only value is considered
-    assert h5 < jack < queen < king < ace   # Value ordering
+    assert h5 == h5  # Numbered card equal to itself
+    assert queen == queen  # Royal card equal to itself
+    assert ace == ace_hearts  # Check so that only value is considered
+    assert h5 < jack < queen < king < ace  # Value ordering
 
     with pytest.raises(TypeError):
         pc = PlayingCard(Suit.Clubs)
@@ -65,7 +65,6 @@ def test_deck():
     assert c5 not in d3.cards and c6 not in d3.cards
 
 
-
 # This test builds on the assumptions above and assumes you store the cards in the hand in the list "cards",
 # and that your sorting method is called "sort" and sorts in increasing order
 def test_hand():
@@ -90,8 +89,7 @@ def test_hand():
     assert h.cards[0] == cards[2]
     assert h.cards[1] == cards[4]
 
-
-# Adds to determined card to the hand to check if it drops the intended card and that size of hand is correct
+    # Adds to determined card to the hand to check if it drops the intended card and that size of hand is correct
     h2 = Hand()
 
     h2.add_card(NumberedCard(9, Suit.Clubs))
@@ -100,6 +98,7 @@ def test_hand():
     h2.drop_cards([0])
     assert len(h2.cards) == 1
     assert h2.cards[0] == JackCard(Suit.Hearts)
+
 
 # This test builds on the assumptions above. Add your type and data for the commented out tests
 # and uncomment them!
@@ -137,12 +136,10 @@ def test_pokerhands():
     ph5 = h1.best_poker_hand(cl)
     # assert # Check ph5 handtype class and data here>
 
-
-
+    # Check that flush > straight
     h1 = Hand()
     h1.add_card(JackCard(Suit.Clubs))
     h1.add_card(QueenCard(Suit.Clubs))
-
 
     h2 = Hand()
     h2.add_card(NumberedCard(2, Suit.Hearts))
@@ -156,6 +153,39 @@ def test_pokerhands():
 
     assert poker_hand1 > poker_hand2
 
+    # Check that two fullhouses with same values equal each other
+    h3 = Hand()
+    h3.add_card(NumberedCard(2, Suit.Spades))
+    h3.add_card(NumberedCard(3, Suit.Clubs))
 
+    h4 = Hand()
+    h4.add_card(NumberedCard(2, Suit.Hearts))
+    h4.add_card(NumberedCard(3, Suit.Diamonds))
 
+    cards_on_table = [NumberedCard(2, Suit.Diamonds), NumberedCard(2, Suit.Clubs), NumberedCard(3, Suit.Spades),
+                      KingCard(Suit.Spades)
+        , QueenCard(Suit.Clubs)]
 
+    poker_hand3 = h3.best_poker_hand(cards_on_table)
+    poker_hand4 = h4.best_poker_hand(cards_on_table)
+
+    assert poker_hand3 == poker_hand4
+
+    # Check that a fullhouse with higher three is larger than other fullhouse
+
+    h3 = Hand()
+    h3.add_card(NumberedCard(2, Suit.Spades))
+    h3.add_card(NumberedCard(4, Suit.Clubs))
+
+    h4 = Hand()
+    h4.add_card(NumberedCard(2, Suit.Hearts))
+    h4.add_card(NumberedCard(3, Suit.Diamonds))
+
+    cards_on_table = [NumberedCard(3, Suit.Hearts), NumberedCard(2, Suit.Clubs), NumberedCard(3, Suit.Spades),
+                      NumberedCard(4, Suit.Spades)
+        , NumberedCard(4, Suit.Hearts)]
+
+    poker_hand3 = h3.best_poker_hand(cards_on_table)
+    poker_hand4 = h4.best_poker_hand(cards_on_table)
+
+    assert poker_hand3 > poker_hand4
