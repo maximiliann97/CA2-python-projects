@@ -121,12 +121,19 @@ class HandType(IntEnum):
     PAIR = 2
     HIGH_CARD = 1
 
+    def __lt__(self, other):
+        return self.value < other.value
+
+    def __eq__(self, other):
+        return self.value == other.value
+
 
 class PokerHand:
     def __init__(self, cards: list):
-        self.cards = cards
+        self.cards = cards.sort(reverse=True)
         checkers = [self.check_straight_flush(cards), self.check_four_of_a_kind(cards), self.check_full_house(cards),
                     self.check_flush(cards), self.check_straight(cards), self.check_diff_pairs(cards)]
+
 
         for checker in checkers:
             v = checker
@@ -136,6 +143,9 @@ class PokerHand:
 
     def __lt__(self, other):
         return self.type < other.type
+
+    def __eq__(self, other):
+        return self.type == other.type
 
     @staticmethod
     def check_straight_flush(cards):
@@ -149,7 +159,8 @@ class PokerHand:
                     found_straight = False
                     break
             if found_straight:
-                return HandType.STRAIGHT_FLUSH, c.get_value()
+                return HandType.STRAIGHT_FLUSH, cards[0:5]
+
 
     @staticmethod
     def check_four_of_a_kind(cards):
@@ -160,7 +171,7 @@ class PokerHand:
         fours = [v[0] for v in value_count.items() if v[1] >= 4]
         fours.sort()
         if fours:
-            return HandType.FOUR_OF_A_KIND, max(fours)
+            return HandType.FOUR_OF_A_KIND, cards[0:5]
 
     @staticmethod
     def check_full_house(cards):
@@ -185,7 +196,7 @@ class PokerHand:
             if c.suit != cards[0].suit:
                 break
             else:
-                return HandType.FLUSH, c.get_value()
+                return HandType.FLUSH, cards[0:5]
 
     @staticmethod
     def check_straight(cards):
@@ -199,7 +210,7 @@ class PokerHand:
                     found_straight = False
                     break
             if found_straight:
-                return HandType.STRAIGHT, c.get_value()
+                return HandType.STRAIGHT, cards[0:5]
 
     @staticmethod
     def check_diff_pairs(cards):
@@ -214,13 +225,13 @@ class PokerHand:
         twos.sort()
 
         if threes:
-            return HandType.THREE_OF_A_KIND, max(threes)
+            return HandType.THREE_OF_A_KIND, cards[0:5]
         if twos:
             if len(twos) == 2:
-                return HandType.TWO_PAIRS, max(twos)
+                return HandType.TWO_PAIRS, cards[0:5]
             elif len(twos) == 1:
-                return HandType.PAIR, max(twos)
-        return HandType.HIGH_CARD, max(cards)
+                return HandType.PAIR, cards[0:5]
+        return HandType.HIGH_CARD, cards[0:5]
 
     def __repr__(self):
         return f'{self.type}'
