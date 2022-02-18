@@ -11,22 +11,26 @@ def test_cards():
     queen = QueenCard(Suit.Hearts)
     king = KingCard(Suit.Diamonds)
     ace = AceCard(Suit.Clubs)
+    ace_hearts = AceCard(Suit.Hearts)
+
+    # Checks correct form of the cards
     assert isinstance(h5.suit, Enum)
     assert isinstance(jack.suit, Enum)
     assert isinstance(queen.suit, Enum)
     assert isinstance(king.suit, Enum)
     assert isinstance(ace.suit, Enum)
 
-# Checks so that the different cards equals to what their intended value should be
-    assert h5 == 4
+    # Checks so that the different cards equals to what their intended value should be
+    assert h5.get_value() == 4
     assert jack.get_value() == 11
     assert queen.get_value() == 12
     assert king.get_value() == 13
     assert ace.get_value() == 14
 
-# Compares the different card types.
-    assert h5 == h5     # Numbered card equeal to itself
+    # Compares the different card types.
+    assert h5 == h5     # Numbered card equal to itself
     assert queen == queen   # Royal card equal to itself
+    assert ace == ace_hearts    # Check so that only value is considered
     assert h5 < jack < queen < king < ace   # Value ordering
 
     with pytest.raises(TypeError):
@@ -45,6 +49,21 @@ def test_deck():
     c3 = d2.draw()
     c4 = d2.draw()
     assert not ((c3, c4) == (c1, c2))
+
+    d3 = StandardDeck()
+    d3.shuffle()
+    c5 = d3.draw()
+    c6 = d3.draw()
+    assert len(d3.cards) == 50
+
+    # Check so the deck "understand" that a card has been drawn
+    deck = []
+    deck = [deck.append(d3.draw()) for item in range(len(d3.cards))]
+    assert len(deck) == 50
+
+    # Check so that those exact cards are not in the deck anymore
+    assert c5 not in d3.cards and c6 not in d3.cards
+
 
 
 # This test builds on the assumptions above and assumes you store the cards in the hand in the list "cards",
@@ -71,6 +90,16 @@ def test_hand():
     assert h.cards[0] == cards[2]
     assert h.cards[1] == cards[4]
 
+
+# Adds to determined card to the hand to check if it drops the intended card and that size of hand is correct
+    h2 = Hand()
+
+    h2.add_card(NumberedCard(9, Suit.Clubs))
+    h2.add_card(JackCard(Suit.Hearts))
+    assert len(h2.cards) == 2
+    h2.drop_cards([0])
+    assert len(h2.cards) == 1
+    assert h2.cards[0] == JackCard(Suit.Hearts)
 
 # This test builds on the assumptions above. Add your type and data for the commented out tests
 # and uncomment them!
@@ -107,3 +136,26 @@ def test_pokerhands():
     cl = [QueenCard(Suit.Clubs), QueenCard(Suit.Spades), KingCard(Suit.Clubs), KingCard(Suit.Spades)]
     ph5 = h1.best_poker_hand(cl)
     # assert # Check ph5 handtype class and data here>
+
+
+
+    h1 = Hand()
+    h1.add_card(JackCard(Suit.Clubs))
+    h1.add_card(QueenCard(Suit.Clubs))
+
+
+    h2 = Hand()
+    h2.add_card(NumberedCard(2, Suit.Hearts))
+    h2.add_card(NumberedCard(3, Suit.Hearts))
+
+    cards_on_table = [NumberedCard(4, Suit.Clubs), NumberedCard(5, Suit.Clubs), NumberedCard(6, Suit.Clubs),
+                      AceCard(Suit.Spades), AceCard(Suit.Diamonds)]
+
+    poker_hand1 = h1.best_poker_hand(cards_on_table)
+    poker_hand2 = h2.best_poker_hand(cards_on_table)
+
+    assert poker_hand1 > poker_hand2
+
+
+
+

@@ -190,11 +190,21 @@ class PokerHand:
 
     @staticmethod
     def check_flush(cards):
-        for c in reversed(cards):
-            if c.suit != cards[0].suit:
-                break
-            else:
-                return HandType.FLUSH, cards[0:7]
+        suits = [c.suit for c in cards]
+        values = [(c.get_value(), c.suit) for c in cards]
+        # Find suit if suit is found at least 5 times
+        flush_check = ([item for item, count in Counter(suits).items() if count >= 5])
+        if flush_check:
+            return HandType.FLUSH, cards[0:7]
+
+
+
+
+        # for c in reversed(cards):
+        #     if c.suit != cards[0].suit:
+        #         break
+        #     else:
+        #         return HandType.FLUSH, cards[0:7]
 
     @staticmethod
     def check_straight(cards):
@@ -238,32 +248,17 @@ class PokerHand:
         return f'{self.type}'
 
 
-l = NumberedCard(3, Suit.Hearts)
-j = NumberedCard(10, Suit.Hearts)
-q = NumberedCard(5, Suit.Hearts)
-y = NumberedCard(5, Suit.Hearts)
-r = NumberedCard(2, Suit.Hearts)
 
-cards = [l, j, r, q, y]
+h1 = Hand()
+h1.add_card(JackCard(Suit.Clubs))
+h1.add_card(QueenCard(Suit.Clubs))
 
-n = PokerHand.check_diff_pairs(cards)
-print(n)
+cards_on_table = [NumberedCard(4, Suit.Clubs), NumberedCard(5, Suit.Clubs), NumberedCard(6, Suit.Clubs),
+                  AceCard(Suit.Hearts), KingCard(Suit.Diamonds)]
 
-
-
-h = Hand()
-d = StandardDeck()
-d.shuffle()
-h.add_card(d.draw())
-h.add_card(d.draw())
-h.sort()
-
-print(cards)
-print(h.cards)
-best_hand = h.best_poker_hand(cards)
-print(best_hand)
-
-
+poker_hand1 = h1.best_poker_hand(cards_on_table)
+print(poker_hand1)
+print(PokerHand.check_flush(cards_on_table))
 
 
 
