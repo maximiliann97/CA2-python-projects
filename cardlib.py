@@ -1,11 +1,10 @@
-from enum import IntEnum
 from enum import Enum
 from abc import ABC, abstractmethod
 from random import shuffle
 from collections import Counter
 
 
-class Suit(IntEnum):
+class Suit(Enum):
     Hearts = 3
     Spades = 2
     Clubs = 1
@@ -109,7 +108,7 @@ class Hand:
         return PokerHand(self.cards + cards)
 
 
-class HandType(IntEnum):
+class HandType(Enum):
 
     STRAIGHT_FLUSH = 9
     FOUR_OF_A_KIND = 8
@@ -133,7 +132,6 @@ class PokerHand:
         self.cards = cards.sort(reverse=True)
         checkers = [self.check_straight_flush(cards), self.check_four_of_a_kind(cards), self.check_full_house(cards),
                     self.check_flush(cards), self.check_straight(cards), self.check_diff_pairs(cards)]
-
 
         for checker in checkers:
             v = checker
@@ -159,7 +157,7 @@ class PokerHand:
                     found_straight = False
                     break
             if found_straight:
-                return HandType.STRAIGHT_FLUSH, cards[0:5]
+                return HandType.STRAIGHT_FLUSH, cards[0:7]
 
 
     @staticmethod
@@ -171,7 +169,7 @@ class PokerHand:
         fours = [v[0] for v in value_count.items() if v[1] >= 4]
         fours.sort()
         if fours:
-            return HandType.FOUR_OF_A_KIND, cards[0:5]
+            return HandType.FOUR_OF_A_KIND, cards[0:7]
 
     @staticmethod
     def check_full_house(cards):
@@ -196,7 +194,7 @@ class PokerHand:
             if c.suit != cards[0].suit:
                 break
             else:
-                return HandType.FLUSH, cards[0:5]
+                return HandType.FLUSH, cards[0:7]
 
     @staticmethod
     def check_straight(cards):
@@ -210,7 +208,7 @@ class PokerHand:
                     found_straight = False
                     break
             if found_straight:
-                return HandType.STRAIGHT, cards[0:5]
+                return HandType.STRAIGHT, cards[0:7]
 
     @staticmethod
     def check_diff_pairs(cards):
@@ -222,30 +220,36 @@ class PokerHand:
         threes.sort()
         # Find the card ranks that have at least a pair
         twos = [v[0] for v in value_count.items() if v[1] >= 2]
-        twos.sort()
+        twos.sort(reverse=True)
+
+        list_of_cards_twos = [twos, cards[0:7]]
+        list_of_cards_threes = [threes, cards[0:7]]
 
         if threes:
-            return HandType.THREE_OF_A_KIND, cards[0:5]
+            return HandType.THREE_OF_A_KIND, list_of_cards_threes
         if twos:
             if len(twos) == 2:
-                return HandType.TWO_PAIRS, cards[0:5]
+                return HandType.TWO_PAIRS, list_of_cards_twos
             elif len(twos) == 1:
-                return HandType.PAIR, cards[0:5]
-        return HandType.HIGH_CARD, cards[0:5]
+                return HandType.PAIR, list_of_cards_twos
+        return HandType.HIGH_CARD, cards[0:7]
 
     def __repr__(self):
         return f'{self.type}'
 
 
 l = NumberedCard(3, Suit.Hearts)
-j = NumberedCard(4, Suit.Hearts)
+j = NumberedCard(10, Suit.Hearts)
 q = NumberedCard(5, Suit.Hearts)
 y = NumberedCard(5, Suit.Hearts)
-r = NumberedCard(10, Suit.Hearts)
+r = NumberedCard(2, Suit.Hearts)
 
 cards = [l, j, r, q, y]
 
-n = PokerHand
+n = PokerHand.check_diff_pairs(cards)
+print(n)
+
+
 
 h = Hand()
 d = StandardDeck()
@@ -259,43 +263,7 @@ print(h.cards)
 best_hand = h.best_poker_hand(cards)
 print(best_hand)
 
-#print(HandType.THREE_OF_A_KIND > HandType.PAIR)
 
-a = HandType.PAIR, 12
 
-print(a)
 
-b = HandType.PAIR, 12
-
-print(a > b)
-
-h1 = Hand()
-h1.add_card(QueenCard(Suit.Diamonds))
-h1.add_card(KingCard(Suit.Hearts))
-
-h2 = Hand()
-h2.add_card(QueenCard(Suit.Hearts))
-h2.add_card(KingCard(Suit.Hearts))
-
-cl = [NumberedCard(10, Suit.Diamonds), NumberedCard(9, Suit.Diamonds),
-      NumberedCard(8, Suit.Clubs), NumberedCard(6, Suit.Spades)]
-
-ph1 = h1.best_poker_hand(cl)
-print(ph1)
-print(isinstance(ph1, PokerHand))
-ph2 = h2.best_poker_hand(cl)
-print(ph2)
-
-print(ph1 < ph2)
-
-cl.pop(0)
-cl.append(QueenCard(Suit.Spades))
-ph3 = h1.best_poker_hand(cl)
-ph4 = h2.best_poker_hand(cl)
-print(ph3)
-print(ph4)
-
-print(ph3 == ph4)
-print(ph3 > ph4)
-print(ph3 < ph4)
 
