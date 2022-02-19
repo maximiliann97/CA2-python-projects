@@ -376,7 +376,6 @@ class PokerHand:
         :return: HandType and list of the considered cards in descending order
         """
         suits = [c.suit for c in cards]
-        values = [(c.get_value(), c.suit) for c in cards]
         # Find suit if suit is found at least 5 times
         flush_check = ([item for item, count in Counter(suits).items() if count >= 5])
         if flush_check:
