@@ -5,6 +5,9 @@ from collections import Counter
 
 
 class Suit(Enum):
+    """
+    Class of Enum type implemented in order to sort using the __lt__ operator
+    """
     Hearts = 3
     Spades = 2
     Clubs = 1
@@ -13,60 +16,153 @@ class Suit(Enum):
     def __str__(self):
         return self.name
 
-
 class PlayingCard(ABC):
+    """
+    Is an abstract base class, which will work as a blueprint for creating the cards.
+    """
+
     def __init__(self, suit: Suit):
         self.suit = suit
 
     @abstractmethod
     def get_value(self):
+        """
+        Abstract method for retrieving values of cards, serves as a contract: in order to be considered a card
+        this method must be implemented in the card.
+        """
         pass
 
     def __eq__(self, other):
+        """
+        Equal operator that enables comparing if values are equal
+        :param other:
+        :return: True or False
+        """
         return self.get_value() == other.get_value()
 
     def __lt__(self, other):
+        """
+        Less than operator enables comparing magnitude of values.
+        :param other:
+        :return: True or False
+        """
         return self.get_value() < other.get_value()
-
-    def __repr__(self):
-        return f"{self.suit} of {self.get_value()}"
 
 
 class NumberedCard(PlayingCard):
+    """
+    Subclass of PlayingCard which it inherits from. Subclass is the numbered cards in a deck.
+    """
     def __init__(self, value, suit):
+        """
+        Constructs the card with value and inherits suit from PlayingCard
+        :param value:
+        :param suit:
+        """
         self.value = value
         super().__init__(suit)
 
     def get_value(self):
+        """
+        Method of retrieving card values
+        :return: value
+        """
         return self.value
 
+    def __repr__(self):
+        """
+        Overloads the __repr__ to print the card in a neat manner
+        :return:
+        """
+        return f"{str(self.value)} of {str(self.suit.name)}"
 
 class JackCard(PlayingCard):
-
+    """
+    Subclass of PlayingCard which it inherits from. Subclass is the Jack card in a deck corresponding to value 11.
+    """
     def get_value(self):
+        """
+        Method of retrieving card values
+        :return: value = 11
+        """
         return 11
+
+    def __repr__(self):
+        """
+        Overloads the __repr__ to print the card in a neat manner
+        :return:
+        """
+        return f"Jack of {self.suit.name}"
 
 
 class QueenCard(PlayingCard):
+    """
+    Subclass of PlayingCard which it inherits from. Subclass is the Queen card in a deck corresponding to value 12.
+    """
 
     def get_value(self):
+        """
+        Method of retrieving card values
+        :return: value = 12
+        """
         return 12
+
+    def __repr__(self):
+        """
+        Overloads the __repr__ to print the card in a neat manner
+        :return:
+        """
+        return f"Queen of {self.suit.name}"
+
 
 
 class KingCard(PlayingCard):
-
+    """
+    Subclass of PlayingCard which it inherits from. Subclass is the King card in a deck corresponding to value 13.
+    """
     def get_value(self):
+        """
+        Method of retrieving card values
+        :return: value = 13
+        """
         return 13
+
+    def __repr__(self):
+        """
+        Overloads the __repr__ to print the card in a neat manner
+        :return:
+        """
+        return f"King of {self.suit.name}"
 
 
 class AceCard(PlayingCard):
-
+    """
+    Subclass of PlayingCard which it inherits from. Subclass is the Ace card in a deck corresponding to value 14.
+    """
     def get_value(self):
+        """
+        Method of retrieving card values
+        :return: value = 14
+        """
         return 14
+
+    def __repr__(self):
+        """
+        Overloads the __repr__ to print the card in a neat manner
+        :return:
+        """
+        return f"Ace of {self.suit.name}"
 
 
 class StandardDeck:
+    """
+    Class that creates the deck of cards containing 52 unique cards, incorporates methods for shuffling the deck and
+    drawing cards.
+    """
     def __init__(self):
+        """
+        Constructs an empty list which is to be filled with cards in no order of importance.
+        """
         self.cards = []
 
         for suit in Suit:
@@ -77,25 +173,35 @@ class StandardDeck:
             for value in range(2, 11):
                 self.cards.append(NumberedCard(value, suit))
 
-    def __iter__(self):
-        return iter(self.cards)
-
     def shuffle(self):
+        """
+        Shuffles the deck with the shuffle function
+        """
         shuffle(self.cards)
 
     def draw(self):
+        """
+        Draws the first card of the deck.
+        :return:
+        """
         return self.cards.pop(0)
 
+    def __repr__(self):
+        """
+        Overloads the __repr__ to print the cards of the deck
+        :return:
+        """
+        return str(self.cards)
 
 class Hand:
     def __init__(self, cards=None):
         if cards is None:
-            self.cards = []  # We almost always want to initialise variables.
+            self.cards = []  # Initialise variables.
         else:
             self.cards = cards
 
     def add_card(self, card):
-        self.cards.append(card)  # ska man inte ha en if sats, tänker man kan väl inte ha två av samma kort
+        self.cards.append(card)
 
     def drop_cards(self, indices):
         for index in sorted(indices, reverse=True):
@@ -198,14 +304,6 @@ class PokerHand:
             return HandType.FLUSH, cards[0:7]
 
 
-
-
-        # for c in reversed(cards):
-        #     if c.suit != cards[0].suit:
-        #         break
-        #     else:
-        #         return HandType.FLUSH, cards[0:7]
-
     @staticmethod
     def check_straight(cards):
         vals = [c.get_value() for c in cards] \
@@ -246,19 +344,3 @@ class PokerHand:
 
     def __repr__(self):
         return f'{self.type}'
-
-
-
-h1 = Hand()
-h1.add_card(JackCard(Suit.Clubs))
-h1.add_card(QueenCard(Suit.Clubs))
-
-cards_on_table = [NumberedCard(4, Suit.Clubs), NumberedCard(5, Suit.Clubs), NumberedCard(6, Suit.Clubs),
-                  AceCard(Suit.Hearts), KingCard(Suit.Diamonds)]
-
-poker_hand1 = h1.best_poker_hand(cards_on_table)
-print(poker_hand1)
-print(PokerHand.check_flush(cards_on_table))
-
-
-
