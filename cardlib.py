@@ -194,27 +194,55 @@ class StandardDeck:
         return str(self.cards)
 
 class Hand:
+    """
+    Class that's represent a player hand with methods that add, drop and sorting cards. It also include a method that
+    returns the best poker hand based on the cards on the table and the cards on the hand.
+    """
     def __init__(self, cards=None):
+        """
+        Construct a hand with cards
+        :param cards:
+        """
         if cards is None:
-            self.cards = []  # Initialise variables.
+            self.cards = []  # We almost always want to initialise variables.
         else:
             self.cards = cards
 
     def add_card(self, card):
-        self.cards.append(card)
+        """
+        Method that add cards to the hand
+        :param card:
+        """
+        self.cards.append(card)  # ska man inte ha en if sats, tänker man kan väl inte ha två av samma kort
 
     def drop_cards(self, indices):
+        """
+        dropping cards from the hand based on index
+        :param indices:
+        """
         for index in sorted(indices, reverse=True):
             del self.cards[index]
 
     def sort(self):
+        """
+        Sort the cards on the hand
+        :return:
+        """
         return self.cards.sort()
 
     def best_poker_hand(self, cards):
+        """
+        Gives the best pokerhand based on cards on the table and cards on the hand
+        :param cards:
+        :return: The hand type with it's Enum value and a list with all the cards (cards on hand and cards on table, i.e. 7 cards)
+        """
         return PokerHand(self.cards + cards)
 
 
 class HandType(Enum):
+    """
+    Enum class that assign a value to each hand type
+    """
 
     STRAIGHT_FLUSH = 9
     FOUR_OF_A_KIND = 8
@@ -227,14 +255,31 @@ class HandType(Enum):
     HIGH_CARD = 1
 
     def __lt__(self, other):
+        """
+        Comparing if self.value is less than other.value
+        :param other:
+        :return: True or False
+        """
         return self.value < other.value
 
     def __eq__(self, other):
+        """
+        Comparing if self.value is equal to other value
+        :param other:
+        :return: True or False
+        """
         return self.value == other.value
 
 
 class PokerHand:
+    """
+    Class that checks the hand type of the poker hand
+    """
     def __init__(self, cards: list):
+        """
+        Construct self.type that represent the highest hand type of the poker hand
+        :param cards:
+        """
         self.cards = cards.sort(reverse=True)
         checkers = [self.check_straight_flush(cards), self.check_four_of_a_kind(cards), self.check_full_house(cards),
                     self.check_flush(cards), self.check_straight(cards), self.check_diff_pairs(cards)]
@@ -246,13 +291,28 @@ class PokerHand:
                 break
 
     def __lt__(self, other):
+        """
+        Comparing if self.value is less than other.value
+        :param other:
+        :return: True or False
+        """
         return self.type < other.type
 
     def __eq__(self, other):
+        """
+        Comparing if self.value is equal to other value
+        :param other:
+        :return: True or False
+        """
         return self.type == other.type
 
     @staticmethod
     def check_straight_flush(cards):
+        """
+        static method that check if the poker hand is a straight flush
+        :param cards:
+        :return: Hand type with it's enum value and a list with all the cards (five cards on table and two cards on the hand)
+        """
         vals = [(c.get_value(), c.suit) for c in cards] \
                + [(1, c.suit) for c in cards if c.get_value() == 14]  # Add the aces!
         for c in reversed(cards):  # Starting point (high card)
