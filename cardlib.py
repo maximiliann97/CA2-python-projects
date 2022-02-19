@@ -296,6 +296,11 @@ class PokerHand:
 
     @staticmethod
     def check_flush(cards):
+        """
+        Static method to check if there is a flush
+        :param cards: String of cards
+        :return: HandType and string of the considered cards in descending order
+        """
         suits = [c.suit for c in cards]
         values = [(c.get_value(), c.suit) for c in cards]
         # Find suit if suit is found at least 5 times
@@ -306,6 +311,11 @@ class PokerHand:
 
     @staticmethod
     def check_straight(cards):
+        """
+        Static method to check if there is a straight
+        :param cards: String of cards
+        :return: HandType and string of the considered cards in descending order
+        """
         vals = [c.get_value() for c in cards] \
                + [1 for c in cards if c.get_value() == 14]  # Add the aces!
         for c in reversed(cards):  # Starting point (high card)
@@ -320,6 +330,11 @@ class PokerHand:
 
     @staticmethod
     def check_diff_pairs(cards):
+        """
+        Static method to check if there is a threes/two pair/pair or just a high card.
+        :param cards: String of cards
+        :return: HandType and list of either threes, two pair, pair and then with the considered cards in descending order
+        """
         value_count = Counter()
         for c in cards:
             value_count[c.get_value()] += 1
@@ -328,10 +343,10 @@ class PokerHand:
         threes.sort()
         # Find the card ranks that have at least a pair
         twos = [v[0] for v in value_count.items() if v[1] >= 2]
-        twos.sort(reverse=True)
+        twos.sort(reverse=True)     # Sort the pairs in descending order
 
-        list_of_cards_twos = [twos, cards[0:7]]
-        list_of_cards_threes = [threes, cards[0:7]]
+        list_of_cards_twos = [twos, cards[0:7]]  # Creates list with the pair/pairs in the first index/indices and then the cards
+        list_of_cards_threes = [threes, cards[0:7]] # Creates list with the threes in the first index and then the cards
 
         if threes:
             return HandType.THREE_OF_A_KIND, list_of_cards_threes
@@ -343,4 +358,8 @@ class PokerHand:
         return HandType.HIGH_CARD, cards[0:7]
 
     def __repr__(self):
+        """
+        Overloads the __repr__ to print the type of the hand and the cards
+        :return:
+        """
         return f'{self.type}'
