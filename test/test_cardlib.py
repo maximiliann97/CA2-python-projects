@@ -136,6 +136,7 @@ def test_pokerhands():
     ph5 = h1.best_poker_hand(cl)
     # assert # Check ph5 handtype class and data here>
 
+
     # Check that flush > straight
     h1 = Hand()
     h1.add_card(JackCard(Suit.Clubs))
@@ -148,8 +149,8 @@ def test_pokerhands():
     cards_on_table = [NumberedCard(4, Suit.Clubs), NumberedCard(5, Suit.Clubs), NumberedCard(6, Suit.Clubs),
                       AceCard(Suit.Spades), AceCard(Suit.Diamonds)]
 
-    poker_hand1 = h1.best_poker_hand(cards_on_table)
-    poker_hand2 = h2.best_poker_hand(cards_on_table)
+    poker_hand1 = h1.best_poker_hand(cards_on_table)    # Flush hand
+    poker_hand2 = h2.best_poker_hand(cards_on_table)    # Straight hand
 
     assert poker_hand1 > poker_hand2
 
@@ -163,15 +164,14 @@ def test_pokerhands():
     h4.add_card(NumberedCard(3, Suit.Diamonds))
 
     cards_on_table = [NumberedCard(2, Suit.Diamonds), NumberedCard(2, Suit.Clubs), NumberedCard(3, Suit.Spades),
-                      KingCard(Suit.Spades)
-        , QueenCard(Suit.Clubs)]
+                      KingCard(Suit.Spades), QueenCard(Suit.Clubs)]
 
-    poker_hand3 = h3.best_poker_hand(cards_on_table)
-    poker_hand4 = h4.best_poker_hand(cards_on_table)
+    poker_hand3 = h3.best_poker_hand(cards_on_table)    # Fullhouse hand one
+    poker_hand4 = h4.best_poker_hand(cards_on_table)    # Fullhouse hand two
 
     assert poker_hand3 == poker_hand4
 
-    # Check that a fullhouse with higher three is larger than other fullhouse
+    # Check that a fullhouse with higher three is more valued than other fullhouse
 
     h3 = Hand()
     h3.add_card(NumberedCard(2, Suit.Spades))
@@ -182,10 +182,28 @@ def test_pokerhands():
     h4.add_card(NumberedCard(3, Suit.Diamonds))
 
     cards_on_table = [NumberedCard(3, Suit.Hearts), NumberedCard(2, Suit.Clubs), NumberedCard(3, Suit.Spades),
-                      NumberedCard(4, Suit.Spades)
-        , NumberedCard(4, Suit.Hearts)]
+                      NumberedCard(4, Suit.Spades), NumberedCard(4, Suit.Hearts)]
 
-    poker_hand3 = h3.best_poker_hand(cards_on_table)
-    poker_hand4 = h4.best_poker_hand(cards_on_table)
+    poker_hand3 = h3.best_poker_hand(cards_on_table)    # Fullhouse hand with higher three
+    poker_hand4 = h4.best_poker_hand(cards_on_table)    # Fullhouse hand with lesser three
 
     assert poker_hand3 > poker_hand4
+
+
+    # Checking equal pair with different high card
+    h3.drop_cards([1])
+    h4.drop_cards([1])
+
+    h3.add_card(QueenCard(Suit.Hearts))
+    h4.add_card(KingCard(Suit.Hearts))
+
+    poker_hand5 = h3.best_poker_hand(cards_on_table)    # Pair hand with lesser high card
+    poker_hand6 = h4.best_poker_hand(cards_on_table)    # Pair hand with highest high card
+
+
+    assert poker_hand6 > poker_hand5
+
+
+    # Check of ordering of all already created hands
+    # fullhouse > flush > straight > pair
+    assert poker_hand3 > poker_hand1 > poker_hand2 > poker_hand5
