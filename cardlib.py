@@ -22,6 +22,10 @@ class PlayingCard(ABC):
     """
 
     def __init__(self, suit: Suit):
+        """
+        Constructs suit
+        :param suit:
+        """
         self.suit = suit
 
     @abstractmethod
@@ -55,7 +59,7 @@ class NumberedCard(PlayingCard):
     """
     def __init__(self, value, suit):
         """
-        Constructs the card with value and inherits suit from PlayingCard
+        Constructs the card with value and inherit suit from PlayingCard
         :param value:
         :param suit:
         """
@@ -213,7 +217,7 @@ class Hand:
         Method that add cards to the hand
         :param card:
         """
-        self.cards.append(card)  # ska man inte ha en if sats, tänker man kan väl inte ha två av samma kort
+        self.cards.append(card)
 
     def drop_cards(self, indices):
         """
@@ -232,7 +236,7 @@ class Hand:
 
     def best_poker_hand(self, cards):
         """
-        Gives the best pokerhand based on cards on the table and cards on the hand
+        Gives the best poker hand based on cards on the table and cards on the hand
         :param cards:
         :return: The hand type with it's Enum value and a list with all the cards (cards on hand and cards on table, i.e. 7 cards)
         """
@@ -256,7 +260,7 @@ class HandType(Enum):
 
     def __lt__(self, other):
         """
-        Comparing if self.value is less than other.value
+        Less than operator enables comparing magnitude of values.
         :param other:
         :return: True or False
         """
@@ -264,7 +268,7 @@ class HandType(Enum):
 
     def __eq__(self, other):
         """
-        Comparing if self.value is equal to other value
+        Equal operator that enables comparing if values are equal
         :param other:
         :return: True or False
         """
@@ -278,7 +282,7 @@ class PokerHand:
     def __init__(self, cards: list):
         """
         Construct self.type that represent the highest hand type of the poker hand
-        :param cards:
+        :param cards: List of cards
         """
         self.cards = cards.sort(reverse=True)
         checkers = [self.check_straight_flush(cards), self.check_four_of_a_kind(cards), self.check_full_house(cards),
@@ -292,7 +296,7 @@ class PokerHand:
 
     def __lt__(self, other):
         """
-        Comparing if self.value is less than other.value
+        Less than operator enables comparing magnitude of values.
         :param other:
         :return: True or False
         """
@@ -300,7 +304,7 @@ class PokerHand:
 
     def __eq__(self, other):
         """
-        Comparing if self.value is equal to other value
+        Equal operator that enables comparing if values are equal
         :param other:
         :return: True or False
         """
@@ -309,9 +313,9 @@ class PokerHand:
     @staticmethod
     def check_straight_flush(cards):
         """
-        static method that check if the poker hand is a straight flush
-        :param cards:
-        :return: Hand type with it's enum value and a list with all the cards (five cards on table and two cards on the hand)
+        Static method to check if there is a straight flush
+        :param cards: List of cards
+        :return: HandType and string of the considered cards in descending order
         """
         vals = [(c.get_value(), c.suit) for c in cards] \
                + [(1, c.suit) for c in cards if c.get_value() == 14]  # Add the aces!
@@ -328,6 +332,11 @@ class PokerHand:
 
     @staticmethod
     def check_four_of_a_kind(cards):
+        """
+        Static method to check if there is a four of a kind
+        :param cards: List of cards
+        :return: HandType and string of the considered cards in descending order
+        """
         value_count = Counter()
         for c in cards:
             value_count[c.get_value()] += 1
@@ -339,6 +348,11 @@ class PokerHand:
 
     @staticmethod
     def check_full_house(cards):
+        """
+        Static method to check if there is a full house
+        :param cards: List of cards
+        :return: HandType and string of the considered cards in descending order
+        """
         value_count = Counter()
         for c in cards:
             value_count[c.get_value()] += 1
@@ -358,7 +372,7 @@ class PokerHand:
     def check_flush(cards):
         """
         Static method to check if there is a flush
-        :param cards: String of cards
+        :param cards: List of cards
         :return: HandType and string of the considered cards in descending order
         """
         suits = [c.suit for c in cards]
@@ -373,7 +387,7 @@ class PokerHand:
     def check_straight(cards):
         """
         Static method to check if there is a straight
-        :param cards: String of cards
+        :param cards: List of cards
         :return: HandType and string of the considered cards in descending order
         """
         vals = [c.get_value() for c in cards] \
@@ -392,7 +406,7 @@ class PokerHand:
     def check_diff_pairs(cards):
         """
         Static method to check if there is a threes/two pair/pair or just a high card.
-        :param cards: String of cards
+        :param cards: List of cards
         :return: HandType and list of either threes, two pair, pair and then with the considered cards in descending order
         """
         value_count = Counter()
