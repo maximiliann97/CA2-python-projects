@@ -165,7 +165,7 @@ class StandardDeck:
     """
     def __init__(self):
         """
-        Constructs an empty list which is to be filled with cards in no order of importance.
+        Constructs an empty list which is to be filled with cards in no particular order.
         """
         self.cards = []
 
@@ -199,7 +199,7 @@ class StandardDeck:
 
 class Hand:
     """
-    Class that's represent a player hand with methods that add, drop and sorting cards. It also include a method that
+    Class that represents a player's hand with methods that add, drop and sorting cards. It also includes a method that
     returns the best poker hand based on the cards on the table and the cards on the hand.
     """
     def __init__(self, cards=None):
@@ -237,7 +237,7 @@ class Hand:
     def best_poker_hand(self, cards):
         """
         Gives the best poker hand based on cards on the table and cards on the hand
-        :param cards:
+        :param cards: list of cards
         :return: The hand type with it's Enum value and a list with all the cards (cards on hand and cards on table, i.e. 7 cards)
         """
         return PokerHand(self.cards + cards)
@@ -315,7 +315,7 @@ class PokerHand:
         """
         Static method to check if there is a straight flush
         :param cards: List of cards
-        :return: HandType and string of the considered cards in descending order
+        :return: HandType and list of the considered cards in descending order
         """
         vals = [(c.get_value(), c.suit) for c in cards] \
                + [(1, c.suit) for c in cards if c.get_value() == 14]  # Add the aces!
@@ -335,7 +335,7 @@ class PokerHand:
         """
         Static method to check if there is a four of a kind
         :param cards: List of cards
-        :return: HandType and string of the considered cards in descending order
+        :return: HandType and list of the considered cards in descending order
         """
         value_count = Counter()
         for c in cards:
@@ -351,7 +351,7 @@ class PokerHand:
         """
         Static method to check if there is a full house
         :param cards: List of cards
-        :return: HandType and string of the considered cards in descending order
+        :return: HandType and list of the considered cards in descending order
         """
         value_count = Counter()
         for c in cards:
@@ -373,7 +373,7 @@ class PokerHand:
         """
         Static method to check if there is a flush
         :param cards: List of cards
-        :return: HandType and string of the considered cards in descending order
+        :return: HandType and list of the considered cards in descending order
         """
         suits = [c.suit for c in cards]
         values = [(c.get_value(), c.suit) for c in cards]
@@ -388,7 +388,7 @@ class PokerHand:
         """
         Static method to check if there is a straight
         :param cards: List of cards
-        :return: HandType and string of the considered cards in descending order
+        :return: HandType and list of the considered cards in descending order
         """
         vals = [c.get_value() for c in cards] \
                + [1 for c in cards if c.get_value() == 14]  # Add the aces!
@@ -408,6 +408,7 @@ class PokerHand:
         Static method to check if there is a threes/two pair/pair or just a high card.
         :param cards: List of cards
         :return: HandType and list of either threes, two pair, pair and then with the considered cards in descending order
+                 if HandType is High card the list that is returned contains only cards in descending order
         """
         value_count = Counter()
         for c in cards:
