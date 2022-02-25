@@ -189,7 +189,6 @@ def test_pokerhands():
 
     assert poker_hand3 > poker_hand4
 
-
     # Checking equal pair with different high card
     h3.drop_cards([1])
     h4.drop_cards([1])
@@ -200,10 +199,20 @@ def test_pokerhands():
     poker_hand5 = h3.best_poker_hand(cards_on_table)    # Pair hand with lesser high card
     poker_hand6 = h4.best_poker_hand(cards_on_table)    # Pair hand with highest high card
 
-
     assert poker_hand6 > poker_hand5
-
 
     # Check of ordering of all already created hands
     # fullhouse > flush > straight > pair
     assert poker_hand3 > poker_hand1 > poker_hand2 > poker_hand5
+
+    # Test for three of a kind and straight
+    h5 = Hand()
+    h5.add_card(NumberedCard(4, Suit.Hearts))
+    h5.add_card(NumberedCard(9, Suit.Hearts))
+
+    cards_on_table.pop(0)
+    cards_on_table.append(NumberedCard(10, Suit.Clubs))
+
+    poker_hand7 = h5.best_poker_hand(cards_on_table)
+
+    assert poker_hand2 > poker_hand7

@@ -197,6 +197,7 @@ class StandardDeck:
         """
         return str(self.cards)
 
+
 class Hand:
     """
     Class that represents a player's hand with methods that add, drop and sorting cards. It also includes a method that
@@ -232,7 +233,7 @@ class Hand:
         Sort the cards on the hand
         :return:
         """
-        return self.cards.sort()
+        self.cards.sort()
 
     def best_poker_hand(self, cards):
         """
@@ -241,6 +242,13 @@ class Hand:
         :return: The hand type with it's Enum value and a list with all the cards (cards on hand and cards on table, i.e. 7 cards)
         """
         return PokerHand(self.cards + cards)
+
+    def __repr__(self):
+        """
+        Overloads the __repr__ to print the cards of the hand
+        :return:
+        """
+        return str(self.cards)
 
 
 class HandType(Enum):
@@ -285,11 +293,11 @@ class PokerHand:
         :param cards: List of cards
         """
         self.cards = cards.sort(reverse=True)
-        checkers = [self.check_straight_flush(cards), self.check_four_of_a_kind(cards), self.check_full_house(cards),
-                    self.check_flush(cards), self.check_straight(cards), self.check_diff_pairs(cards)]
+        checkers = [self.check_straight_flush, self.check_four_of_a_kind, self.check_full_house,
+                    self.check_flush, self.check_straight, self.check_diff_pairs]
 
         for checker in checkers:
-            v = checker
+            v = checker(cards)
             if v is not None:
                 self.type = v
                 break
@@ -328,7 +336,6 @@ class PokerHand:
                     break
             if found_straight:
                 return HandType.STRAIGHT_FLUSH, cards[0:7]
-
 
     @staticmethod
     def check_four_of_a_kind(cards):
@@ -380,7 +387,6 @@ class PokerHand:
         flush_check = ([item for item, count in Counter(suits).items() if count >= 5])
         if flush_check:
             return HandType.FLUSH, cards[0:7]
-
 
     @staticmethod
     def check_straight(cards):
