@@ -24,7 +24,9 @@ class PlayingCard(ABC):
     def __init__(self, suit: Suit):
         """
         Constructs suit
+
         :param suit:
+
         """
         self.suit = suit
 
@@ -39,7 +41,9 @@ class PlayingCard(ABC):
     def __eq__(self, other):
         """
         Equal operator that enables comparing if values are equal
+
         :param other:
+
         :return: True or False
         """
         return self.get_value() == other.get_value()
@@ -47,7 +51,9 @@ class PlayingCard(ABC):
     def __lt__(self, other):
         """
         Less than operator enables comparing magnitude of values.
+
         :param other:
+
         :return: True or False
         """
         return self.get_value() < other.get_value()
@@ -60,7 +66,9 @@ class NumberedCard(PlayingCard):
     def __init__(self, value, suit):
         """
         Constructs the card with value and inherit suit from PlayingCard
+
         :param value:
+
         :param suit:
         """
         self.value = value
@@ -69,6 +77,7 @@ class NumberedCard(PlayingCard):
     def get_value(self):
         """
         Method of retrieving card values
+
         :return: value
         """
         return self.value
@@ -76,7 +85,7 @@ class NumberedCard(PlayingCard):
     def __repr__(self):
         """
         Overloads the __repr__ to print the card in a neat manner
-        :return:
+
         """
         return f"{str(self.value)} of {str(self.suit.name)}"
 
@@ -87,6 +96,7 @@ class JackCard(PlayingCard):
     def get_value(self):
         """
         Method of retrieving card values
+
         :return: value = 11
         """
         return 11
@@ -94,7 +104,7 @@ class JackCard(PlayingCard):
     def __repr__(self):
         """
         Overloads the __repr__ to print the card in a neat manner
-        :return:
+
         """
         return f"Jack of {self.suit.name}"
 
@@ -107,6 +117,7 @@ class QueenCard(PlayingCard):
     def get_value(self):
         """
         Method of retrieving card values
+
         :return: value = 12
         """
         return 12
@@ -114,7 +125,7 @@ class QueenCard(PlayingCard):
     def __repr__(self):
         """
         Overloads the __repr__ to print the card in a neat manner
-        :return:
+
         """
         return f"Queen of {self.suit.name}"
 
@@ -128,13 +139,14 @@ class KingCard(PlayingCard):
         """
         Method of retrieving card values
         :return: value = 13
+
         """
         return 13
 
     def __repr__(self):
         """
         Overloads the __repr__ to print the card in a neat manner
-        :return:
+
         """
         return f"King of {self.suit.name}"
 
@@ -146,6 +158,7 @@ class AceCard(PlayingCard):
     def get_value(self):
         """
         Method of retrieving card values
+
         :return: value = 14
         """
         return 14
@@ -153,7 +166,7 @@ class AceCard(PlayingCard):
     def __repr__(self):
         """
         Overloads the __repr__ to print the card in a neat manner
-        :return:
+
         """
         return f"Ace of {self.suit.name}"
 
@@ -186,14 +199,14 @@ class StandardDeck:
     def draw(self):
         """
         Draws the first card of the deck.
-        :return:
+
         """
         return self.cards.pop(0)
 
     def __repr__(self):
         """
         Overloads the __repr__ to print the cards of the deck
-        :return:
+
         """
         return str(self.cards)
 
@@ -206,16 +219,16 @@ class Hand:
     def __init__(self):
         """
         Construct a hand with cards
+
         :param cards:
         """
-        if cards is None:
-            self.cards = []  # We almost always want to initialise variables.
-        else:
-            self.cards = cards
+        self.cards = []
+
 
     def add_card(self, card):
         """
         Method that add cards to the hand
+
         :param card:
         """
         self.cards.append(card)
@@ -223,6 +236,7 @@ class Hand:
     def drop_cards(self, indices):
         """
         dropping cards from the hand based on index
+
         :param indices:
         """
         for index in sorted(indices, reverse=True):
@@ -231,14 +245,16 @@ class Hand:
     def sort(self):
         """
         Sort the cards on the hand
-        :return:
+
         """
         self.cards.sort()
 
-    def best_poker_hand(self, cards):
+    def best_poker_hand(self, cards=[]):
         """
         Gives the best poker hand based on cards on the table and cards on the hand
+
         :param cards: list of cards
+
         :return: The hand type with it's Enum value and a list with all the cards (cards on hand and cards on table, i.e. 7 cards)
         """
         return PokerHand(self.cards + cards)
@@ -246,7 +262,7 @@ class Hand:
     def __repr__(self):
         """
         Overloads the __repr__ to print the cards of the hand
-        :return:
+
         """
         return str(self.cards)
 
@@ -269,7 +285,9 @@ class HandType(Enum):
     def __lt__(self, other):
         """
         Less than operator enables comparing magnitude of values.
+
         :param other:
+
         :return: True or False
         """
         return self.value < other.value
@@ -277,7 +295,9 @@ class HandType(Enum):
     def __eq__(self, other):
         """
         Equal operator that enables comparing if values are equal
+
         :param other:
+
         :return: True or False
         """
         return self.value == other.value
@@ -290,6 +310,7 @@ class PokerHand:
     def __init__(self, cards: list):
         """
         Construct self.type that represent the highest hand type of the poker hand
+
         :param cards: List of cards
         """
         self.cards = cards.sort(reverse=True)
@@ -299,30 +320,36 @@ class PokerHand:
         for checker in checkers:
             v = checker(cards)
             if v is not None:
-                self.type = v
+                self.type, self.values = v
                 break
 
     def __lt__(self, other):
         """
         Less than operator enables comparing magnitude of values.
+
         :param other:
+
         :return: True or False
         """
-        return self.type < other.type
+        return (self.type, self.values) < (other.type, other.values)
 
     def __eq__(self, other):
         """
         Equal operator that enables comparing if values are equal
+
         :param other:
+
         :return: True or False
         """
-        return self.type == other.type
+        return (self.type, self.values) == (other.type, other.values)
 
     @staticmethod
     def check_straight_flush(cards):
         """
         Static method to check if there is a straight flush
+
         :param cards: List of cards
+
         :return: HandType and list of the considered cards in descending order
         """
         vals = [(c.get_value(), c.suit) for c in cards] \
@@ -341,7 +368,9 @@ class PokerHand:
     def check_four_of_a_kind(cards):
         """
         Static method to check if there is a four of a kind
+
         :param cards: List of cards
+
         :return: HandType and list of the considered cards in descending order
         """
         value_count = Counter()
@@ -357,7 +386,9 @@ class PokerHand:
     def check_full_house(cards):
         """
         Static method to check if there is a full house
+
         :param cards: List of cards
+
         :return: HandType and list of the considered cards in descending order
         """
         value_count = Counter()
@@ -379,7 +410,9 @@ class PokerHand:
     def check_flush(cards):
         """
         Static method to check if there is a flush
+
         :param cards: List of cards
+
         :return: HandType and list of the considered cards in descending order
         """
         suits = [c.suit for c in cards]
@@ -392,7 +425,9 @@ class PokerHand:
     def check_straight(cards):
         """
         Static method to check if there is a straight
+
         :param cards: List of cards
+
         :return: HandType and list of the considered cards in descending order
         """
         vals = [c.get_value() for c in cards] \
@@ -401,7 +436,7 @@ class PokerHand:
             # Check if we have the value - k in the set of cards:
             found_straight = True
             for k in range(1, 5):
-                if (c.get_value() - k, c.suit) not in vals:
+                if (c.get_value() - k) not in vals:
                     found_straight = False
                     break
             if found_straight:
@@ -411,7 +446,9 @@ class PokerHand:
     def check_diff_pairs(cards):
         """
         Static method to check if there is a threes/two pair/pair or just a high card.
+
         :param cards: List of cards
+
         :return: HandType and list of either threes, two pair, pair and then with the considered cards in descending order
                  if HandType is High card the list that is returned contains only cards in descending order
         """
@@ -440,6 +477,6 @@ class PokerHand:
     def __repr__(self):
         """
         Overloads the __repr__ to print the type of the hand and the cards
-        :return:
+
         """
-        return f'{self.type}'
+        return f"{self.type, self.values}"
