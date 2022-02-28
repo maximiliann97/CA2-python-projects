@@ -203,7 +203,7 @@ class Hand:
     Class that represents a player's hand with methods that add, drop and sorting cards. It also includes a method that
     returns the best poker hand based on the cards on the table and the cards on the hand.
     """
-    def __init__(self, cards=None):
+    def __init__(self):
         """
         Construct a hand with cards
         :param cards:
