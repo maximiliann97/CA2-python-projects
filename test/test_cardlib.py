@@ -189,7 +189,7 @@ def test_pokerhands():
 
     assert poker_hand3 > poker_hand4
 
-    # Checking equal pair with different high card
+    # Checking two hands with different high card
     h3.drop_cards([1])
     h4.drop_cards([1])
 
@@ -198,7 +198,6 @@ def test_pokerhands():
 
     poker_hand5 = h3.best_poker_hand(cards_on_table)    # Pair hand with lesser high card
     poker_hand6 = h4.best_poker_hand(cards_on_table)    # Pair hand with highest high card
-
     assert poker_hand6 > poker_hand5
 
     # Check of ordering of all already created hands
@@ -217,11 +216,73 @@ def test_pokerhands():
 
     assert poker_hand2 > poker_hand7
 
+    # Comparison of hands with two pair where one hand has the highest pair
+    h1 = Hand()
+    h1.add_card(QueenCard(Suit.Diamonds))
+    h1.add_card(KingCard(Suit.Hearts))
 
-    # To be added:
-    # Comparison of hands with two pair where one hand has higher pair
-    # Then when the hands have the same highest pair and then different pair for second
-    # Then same pairs with different high card
+    h2 = Hand()
+    h2.add_card(QueenCard(Suit.Hearts))
+    h2.add_card(AceCard(Suit.Hearts))
+
+    cl = [AceCard(Suit.Diamonds), KingCard(Suit.Diamonds),
+          QueenCard(Suit.Clubs), NumberedCard(6, Suit.Spades), NumberedCard(3, Suit.Clubs)]
+
+    ph1 = h1.best_poker_hand(cl)
+    ph2 = h2.best_poker_hand(cl)
+    assert ph2 > ph1
+
+    # The hands have the same highest pair but different pair for second
+    cl.sort()
+    h2.drop_cards([1])
+    h2.drop_cards([0])
+    h2.add_card(KingCard(Suit.Clubs))
+    h2.add_card(NumberedCard(6, Suit.Clubs))
+    ph1 = h1.best_poker_hand(cl)
+    ph2 = h2.best_poker_hand(cl)
+    assert ph1 > ph2
+
+    # Same pairs with different high card
+    h1.drop_cards([0])
+    h1.add_card(NumberedCard(10, Suit.Clubs))
+    h2.drop_cards([1])
+    h2.add_card(NumberedCard(8, Suit.Hearts))
+    ph1 = h1.best_poker_hand(cl)
+    ph2 = h2.best_poker_hand(cl)
+    assert ph1 > ph2
 
     # Three of a kind with different high card
-    # maybe flush with different high card?
+    h3 = Hand()
+    h3.add_card(NumberedCard(2, Suit.Spades))
+    h3.add_card(NumberedCard(2, Suit.Clubs))
+
+    h4 = Hand()
+    h4.add_card(NumberedCard(3, Suit.Hearts))
+    h4.add_card(NumberedCard(3, Suit.Diamonds))
+
+    cards_on_table = [NumberedCard(2, Suit.Diamonds), NumberedCard(10, Suit.Clubs), NumberedCard(3, Suit.Spades),
+                      KingCard(Suit.Clubs), QueenCard(Suit.Clubs)]
+
+    poker_hand3 = h3.best_poker_hand(cards_on_table)
+    poker_hand4 = h4.best_poker_hand(cards_on_table)
+    assert poker_hand4 > poker_hand3
+
+    # Flush with different high card?
+    h3 = Hand()
+    h3.add_card(NumberedCard(5, Suit.Hearts))
+    h3.add_card(NumberedCard(2, Suit.Hearts))
+
+    h4 = Hand()
+    h4.add_card(NumberedCard(3, Suit.Hearts))
+    h4.add_card(NumberedCard(9, Suit.Hearts))
+
+    cards_on_table = [NumberedCard(4, Suit.Hearts), NumberedCard(10, Suit.Hearts), NumberedCard(7, Suit.Hearts),
+                      KingCard(Suit.Clubs), QueenCard(Suit.Clubs)]
+
+    poker_hand3 = h3.best_poker_hand(cards_on_table)
+    poker_hand4 = h4.best_poker_hand(cards_on_table)
+    assert poker_hand4 > poker_hand3
+
+
+
+
