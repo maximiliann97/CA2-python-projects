@@ -216,3 +216,12 @@ def test_pokerhands():
     poker_hand7 = h5.best_poker_hand(cards_on_table)
 
     assert poker_hand2 > poker_hand7
+
+
+    # To be added:
+    # Comparison of hands with two pair where one hand has higher pair
+    # Then when the hands have the same highest pair and then different pair for second
+    # Then same pairs with different high card
+
+    # Three of a kind with different high card
+    # maybe flush with different high card?

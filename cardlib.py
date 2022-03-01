@@ -130,7 +130,6 @@ class QueenCard(PlayingCard):
         return f"Queen of {self.suit.name}"
 
 
-
 class KingCard(PlayingCard):
     """
     Subclass of PlayingCard which it inherits from. Subclass is the King card in a deck corresponding to value 13.
